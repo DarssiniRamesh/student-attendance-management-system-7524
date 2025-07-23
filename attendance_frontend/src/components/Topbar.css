@@ -1,0 +1,68 @@
+.topbar {
+  width: 100%;
+  background: var(--bg-secondary, #f8f9fa);
+  color: var(--text-primary, #282c34);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 56px;
+  box-shadow: 0 2px 4px rgba(40,44,52, 0.04);
+  border-bottom: 1px solid var(--border-color, #e9ecef);
+  z-index: 20;
+  position: sticky;
+  top: 0;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbar-btn {
+  background: var(--button-bg, #1976d2);
+  color: var(--button-text, #fff);
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  margin-left: 0.5rem;
+}
+
+.topbar-btn:hover,
+.topbar-btn:focus {
+  background: var(--text-secondary, #1976d2);
+  outline: none;
+}
+
+.theme-toggle {
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+}
+
+.logout-btn {
+  background: #ff9800;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 0 8px;
+    font-size: 0.9rem;
+    height: 48px;
+  }
+  .topbar-btn {
+    font-size: 0.92em;
+    padding: 6px 10px;
+  }
+}
