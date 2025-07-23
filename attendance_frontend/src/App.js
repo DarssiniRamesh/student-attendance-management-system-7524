@@ -11,11 +11,25 @@ import ClassesPage from './pages/ClassesPage';
 import AttendancePage from './pages/AttendancePage';
 import ReportsPage from './pages/ReportsPage';
 
+import AuthProvider, { useAuth } from './AuthContext';
+
+// PUBLIC_INTERFACE
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return null;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+}
+
+// PUBLIC_INTERFACE
+function UnauthedOnlyRoute({ children }) {
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return null;
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+}
+
 // PUBLIC_INTERFACE
 function App() {
   const [theme, setTheme] = useState('light');
-  // TODO: Implement actual authentication logic
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Effect to apply theme to document element
   useEffect(() => {
@@ -27,47 +41,89 @@ function App() {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
 
-  // Placeholder for authentication logic
-  const handleLogin = () => setIsAuthenticated(true);
-  const handleLogout = () => setIsAuthenticated(false);
+  return (
+    <AuthProvider>
+      <Router>
+        <Main theme={theme} toggleTheme={toggleTheme} />
+      </Router>
+    </AuthProvider>
+  );
+}
+
+// Core app layout and routing
+function Main({ theme, toggleTheme }) {
+  const { isAuthenticated, logout } = useAuth();
 
   return (
-    <Router>
-      <div className="App" style={{ display: "flex", minHeight: "100vh", background: "var(--bg-primary)" }}>
-        {isAuthenticated && <Sidebar />}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          <Topbar 
-            theme={theme}
-            toggleTheme={toggleTheme}
-            isAuthenticated={isAuthenticated}
-            onLogout={handleLogout}
-          />
-          <div style={{ flex: 1, padding: isAuthenticated ? "32px 24px" : 0 }}>
-            <Routes>
-              <Route path="/login" element={
-                isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage onLogin={handleLogin} />
-              } />
-              <Route path="/dashboard" element={
-                isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />
-              } />
-              <Route path="/students" element={
-                isAuthenticated ? <StudentsPage /> : <Navigate to="/login" />
-              } />
-              <Route path="/classes" element={
-                isAuthenticated ? <ClassesPage /> : <Navigate to="/login" />
-              } />
-              <Route path="/attendance" element={
-                isAuthenticated ? <AttendancePage /> : <Navigate to="/login" />
-              } />
-              <Route path="/reports" element={
-                isAuthenticated ? <ReportsPage /> : <Navigate to="/login" />
-              } />
-              <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
-            </Routes>
-          </div>
+    <div className="App" style={{ display: "flex", minHeight: "100vh", background: "var(--bg-primary)" }}>
+      {isAuthenticated && <Sidebar />}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Topbar
+          theme={theme}
+          toggleTheme={toggleTheme}
+          isAuthenticated={isAuthenticated}
+          onLogout={logout}
+        />
+        <div style={{ flex: 1, padding: isAuthenticated ? "32px 24px" : 0 }}>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                <UnauthedOnlyRoute>
+                  <LoginPage />
+                </UnauthedOnlyRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/students"
+              element={
+                <ProtectedRoute>
+                  <StudentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/classes"
+              element={
+                <ProtectedRoute>
+                  <ClassesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/attendance"
+              element={
+                <ProtectedRoute>
+                  <AttendancePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <ProtectedRoute>
+                  <ReportsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <Navigate to={isAuthenticated ? "/dashboard" : "/login"} />
+              }
+            />
+          </Routes>
         </div>
       </div>
-    </Router>
+    </div>
   );
 }
 

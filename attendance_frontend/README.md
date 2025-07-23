@@ -13,6 +13,16 @@ This project provides a minimal React template with a clean, modern UI and minim
 
 In the project directory, you can run:
 
+### Environment Variables
+
+For backend API connectivity and JWT authentication, create a `.env` file in `attendance_frontend`:
+
+```
+REACT_APP_API_URL=http://localhost:8000
+```
+
+Replace the value with your FastAPI backend URL as needed.
+
 ### `npm start`
 
 Runs the app in development mode.\

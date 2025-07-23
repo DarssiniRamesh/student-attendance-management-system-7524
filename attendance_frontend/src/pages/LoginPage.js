@@ -1,29 +1,46 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 // PUBLIC_INTERFACE
-function LoginPage({ onLogin }) {
+function LoginPage() {
   /**
    * User login page.
-   * @param {Function} onLogin - Callback to authenticate user.
+   * Calls AuthContext.login(username, password); on success, navigates to dashboard.
    */
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // TODO: Add fetch to backend. For now, onLogin is called immediately.
+  const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Auth logic would go here, replaced with fake login for now.
-    onLogin();
+    setIsSubmitting(true);
+    setFormError("");
+
+    const result = await login(username, password);
+    if (result.success) {
+      // Redirect to dashboard
+      navigate("/dashboard", { replace: true });
+    } else {
+      setFormError(result.error || "Login failed. Try again.");
+    }
+    setIsSubmitting(false);
   };
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "var(--bg-primary)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg-primary)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
       <form
         onSubmit={handleSubmit}
         style={{
@@ -39,12 +56,23 @@ function LoginPage({ onLogin }) {
         }}
       >
         <h2 style={{ marginBottom: 12, color: "var(--text-primary)" }}>Login</h2>
+        {formError && (
+          <span style={{
+            color: "#d32f2f",
+            fontSize: "0.98em",
+            background: "#fff3f3",
+            padding: "8px",
+            borderRadius: 5,
+            marginBottom: 5
+          }}>{formError}</span>
+        )}
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={e => setUsername(e.target.value)}
           style={inputStyle}
+          disabled={isSubmitting}
           required
         />
         <input
@@ -53,9 +81,16 @@ function LoginPage({ onLogin }) {
           value={password}
           onChange={e => setPassword(e.target.value)}
           style={inputStyle}
+          disabled={isSubmitting}
           required
         />
-        <button type="submit" style={loginBtnStyle}>Login</button>
+        <button
+          type="submit"
+          style={loginBtnStyle}
+          disabled={isSubmitting || !username || !password}
+        >
+          {isSubmitting ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );
