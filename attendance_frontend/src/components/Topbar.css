@@ -1,68 +1,99 @@
 .topbar {
-  width: 100%;
-  background: var(--bg-secondary, #f8f9fa);
-  color: var(--text-primary, #282c34);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  height: 56px;
-  box-shadow: 0 2px 4px rgba(40,44,52, 0.04);
-  border-bottom: 1px solid var(--border-color, #e9ecef);
-  z-index: 20;
+  padding: 0 1.5rem;
+  height: 64px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
+  z-index: 99;
+  transition: all 0.3s ease;
 }
 
 .topbar-left {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .topbar-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .topbar-btn {
-  background: var(--button-bg, #1976d2);
-  color: var(--button-text, #fff);
-  border: none;
-  padding: 7px 14px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  margin-left: 0.5rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.topbar-btn:hover,
-.topbar-btn:focus {
-  background: var(--text-secondary, #1976d2);
-  outline: none;
+.topbar-btn:hover {
+  background: var(--hover-bg);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .theme-toggle {
   font-size: 1.1em;
-  display: flex;
-  align-items: center;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
 }
 
 .logout-btn {
-  background: #ff9800;
-  color: #fff;
+  background: var(--accent);
+  color: white;
+  border: none;
 }
 
-@media (max-width: 600px) {
+.logout-btn:hover {
+  background: var(--accent);
+  opacity: 0.9;
+  color: white;
+}
+
+@media (max-width: 768px) {
   .topbar {
-    padding: 0 8px;
-    font-size: 0.9rem;
-    height: 48px;
+    height: 56px;
+    padding: 0 1rem;
   }
+
   .topbar-btn {
-    font-size: 0.92em;
-    padding: 6px 10px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0 0.75rem;
+  }
+
+  .topbar-btn span {
+    display: none;
+  }
+
+  .theme-toggle,
+  .logout-btn {
+    padding: 0.4rem;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }

@@ -5,17 +5,17 @@ const formStyles = {
   form: {
     display: "flex",
     flexDirection: "column",
-    gap: "16px",
-    maxWidth: "500px",
-    padding: "20px",
+    gap: "1.25rem",
+    maxWidth: "600px",
+    padding: "1.5rem",
     background: "var(--bg-secondary)",
     borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    boxShadow: "var(--card-shadow)",
   },
   inputGroup: {
     display: "flex",
     flexDirection: "column",
-    gap: "6px",
+    gap: "0.5rem",
   },
   label: {
     color: "var(--text-primary)",
@@ -23,30 +23,37 @@ const formStyles = {
     fontWeight: "500",
   },
   input: {
-    padding: "10px",
+    padding: "0.75rem",
     borderRadius: "6px",
     border: "1px solid var(--border-color)",
-    fontSize: "1rem",
+    fontSize: "0.95rem",
     background: "var(--bg-primary)",
     color: "var(--text-primary)",
+    transition: "border-color 0.2s ease",
   },
   button: {
-    padding: "12px",
+    padding: "0.75rem 1.5rem",
     background: "var(--button-bg)",
     color: "var(--button-text)",
     border: "none",
     borderRadius: "6px",
-    fontSize: "1rem",
-    fontWeight: "600",
+    fontSize: "0.95rem",
+    fontWeight: "500",
     cursor: "pointer",
-    transition: "opacity 0.2s",
+    transition: "all 0.2s ease",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
   },
   error: {
     color: "#d32f2f",
     fontSize: "0.9rem",
-    padding: "8px",
-    background: "#fff3f3",
+    padding: "0.75rem",
+    background: "rgba(211, 47, 47, 0.1)",
     borderRadius: "4px",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.5rem",
   }
 };
 
@@ -55,7 +62,7 @@ const tableStyles = {
     overflowX: "auto",
     background: "var(--bg-secondary)",
     borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    boxShadow: "var(--card-shadow)",
   },
   table: {
     width: "100%",
@@ -63,24 +70,27 @@ const tableStyles = {
     fontSize: "0.95rem",
   },
   th: {
-    padding: "12px 16px",
+    padding: "1rem 1.25rem",
     textAlign: "left",
     borderBottom: "2px solid var(--border-color)",
     color: "var(--text-primary)",
     fontWeight: "600",
+    whiteSpace: "nowrap",
   },
   td: {
-    padding: "12px 16px",
+    padding: "1rem 1.25rem",
     borderBottom: "1px solid var(--border-color)",
     color: "var(--text-primary)",
   },
   actionButton: {
-    padding: "6px 12px",
-    borderRadius: "4px",
+    padding: "0.5rem 1rem",
+    borderRadius: "6px",
     border: "none",
     cursor: "pointer",
     fontSize: "0.9rem",
-    marginRight: "8px",
+    fontWeight: "500",
+    transition: "all 0.2s ease",
+    marginRight: "0.5rem",
   }
 };
 
@@ -89,7 +99,13 @@ export function FormInput({ label, error, ...props }) {
   return (
     <div style={formStyles.inputGroup}>
       <label style={formStyles.label}>{label}</label>
-      <input style={formStyles.input} {...props} />
+      <input 
+        style={{
+          ...formStyles.input,
+          borderColor: error ? "#d32f2f" : "var(--border-color)",
+        }} 
+        {...props} 
+      />
       {error && <span style={formStyles.error}>{error}</span>}
     </div>
   );
@@ -98,7 +114,17 @@ export function FormInput({ label, error, ...props }) {
 // PUBLIC_INTERFACE
 export function SubmitButton({ children, ...props }) {
   return (
-    <button style={formStyles.button} type="submit" {...props}>
+    <button 
+      style={{
+        ...formStyles.button,
+        "&:hover": {
+          opacity: 0.9,
+          transform: "translateY(-1px)",
+        }
+      }} 
+      type="submit" 
+      {...props}
+    >
       {children}
     </button>
   );
@@ -121,15 +147,17 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
           {data.map((row, i) => (
             <tr key={i}>
               {columns.map(col => (
-                <td key={col.key} style={tableStyles.td}>{row[col.key]}</td>
+                <td key={col.key} style={tableStyles.td}>
+                  {col.render ? col.render(row) : row[col.key]}
+                </td>
               ))}
               <td style={tableStyles.td}>
                 <button 
                   onClick={() => onEdit(row)}
                   style={{
                     ...tableStyles.actionButton,
-                    background: "var(--button-bg)",
-                    color: "var(--button-text)",
+                    background: "var(--primary)",
+                    color: "white",
                   }}
                 >
                   Edit
@@ -138,8 +166,8 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
                   onClick={() => onDelete(row)}
                   style={{
                     ...tableStyles.actionButton,
-                    background: "#d32f2f",
-                    color: "#fff",
+                    background: "var(--accent)",
+                    color: "white",
                   }}
                 >
                   Delete
@@ -156,7 +184,12 @@ export function DataTable({ columns, data, onEdit, onDelete }) {
 // PUBLIC_INTERFACE
 export function ErrorMessage({ message }) {
   if (!message) return null;
-  return <div style={formStyles.error}>{message}</div>;
+  return (
+    <div style={formStyles.error}>
+      <span style={{ fontSize: "1.2em" }}>⚠️</span>
+      {message}
+    </div>
+  );
 }
 
 export { formStyles, tableStyles };
