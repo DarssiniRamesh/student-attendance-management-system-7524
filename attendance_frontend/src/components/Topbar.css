@@ -1,0 +1,99 @@
+.topbar {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  height: 64px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  transition: all 0.3s ease;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.topbar-btn {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topbar-btn:hover {
+  background: var(--hover-bg);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.theme-toggle {
+  font-size: 1.1em;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+}
+
+.logout-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+}
+
+.logout-btn:hover {
+  background: var(--accent);
+  opacity: 0.9;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    height: 56px;
+    padding: 0 1rem;
+  }
+
+  .topbar-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0 0.75rem;
+  }
+
+  .topbar-btn span {
+    display: none;
+  }
+
+  .theme-toggle,
+  .logout-btn {
+    padding: 0.4rem;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
